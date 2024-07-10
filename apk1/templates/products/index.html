@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+<style>
+    .card-img {
+        height: 300px;
+        width: 100%;
+        filter: brightness(0.4);
+        margin: 0; 
+        padding: 0;
+    }
+
+    .product-card {
+        display: flex;
+        background: linear-gradient(
+            rgba(235, 154, 23, 0.2), 
+            rgba(200, 151, 71, 0.1), 
+            rgba(0, 0, 0, 0.0)
+        );
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border-radius: 32px;
+        color: white;
+        height: 106px; /* Adjust height as needed */
+    }
+    .product-card img {
+        width: 120px;
+        height: 100px; /* Adjust image height */
+        margin-right: 1rem;
+        border-radius: 5px;
+    }
+   
+    .center-text {
+        text-align: center;
+    }
+    .color-white {
+        color: white; /* Define color-white class */
+    }
+      .product-info .text-muted, .product-info .text-success {
+    color: white; /* Text color for original and selling prices */
+}
+
+.favorite-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .heart-icon {
+    font-size: 2rem;
+    transition: color 0.3s ease;
+  }
+  .heart-icon:hover {
+    color: red; /* Change to your desired highlight color */
+  }
+
+</style>
+<div class="card" style="border: none; position: relative; background-color:black; margin: 0; padding: 0;">
+    <img src="{% static 'uploads/banner1.png' %}" class="card-img" alt="demo" >
+    <div class="card-img-overlay" style="display: flex; align-items: center; justify-content: center;">
+        <div class="card-body text-light" style="text-align: center; padding: 20px 0 0 0; transform: translateY(20%);">
+            <h3 class="card-text">     FLAVOURS</h3>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid my-4 p-4">
+    
+    <h2 class="mb-4 center-text">{{ category_name.name }}</h2>
+
+    <div class="row">
+        {% for item in products %}
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <button class="btn " style="background-color: black; color:gold;" data-toggle="modal" data-target="#exampleModalCenter_{{ forloop.counter }}">
+            <div class="product-card">
+                <a href="#">
+                    
+                    <img src="{{ item.product_image.url }}" class="card-img-top" alt="Product Image">
+                
+                </a>
+                <div class="product-info ms-3">
+                    
+
+                    <h4>
+                        <span class='product-info ms-3'>{{ item.name }}</span>
+                        <span class='product-info ms-3'>{{ item.description }}</span>
+                    </h4>
+                    <h5>
+                        <span class="text-muted ms-3 color-white"><del>{{ item.original_price }}</del></span>
+                        <span class="text-success ms-3 color-white">{{ item.selling_price }}</span>
+                    </h5>
+                            <p class="card-text">
+                               
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </button>
+        </div>
+    </div>
+</div>
+
+{% for item in products %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter_{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 70vw; ">
+        <div class="modal-content" style="background-color: #000; border-radius: 10px; border: 1px solid white  " >
+            <div class="modal-header" style="border:none; position: relative;">
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <div class="card shadow product_data" style="background-color: #000;">
+                <div class="card-body p-4" style="background-color: #000;">
+                    <div class="row">
+                        <div class="col-md-5" style="max-height: 300px; overflow: hidden;">
+                            <img src="{{ item.product_image.url }}" class="img-fluid rounded" alt="Product Image" style="width: 100%; max-height: 400px; object-fit: cover;">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <div>
+                                    <h3 class="modal-title" style="color: #ffa500; font-weight: bold;">{{ item.name }}</h3>
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-grow-1">
+                                            <p style="color: #ddd;">{{ item.description }}</p>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div style="border-left: 2px solid orange; height: 100%; margin-left: 10px; margin-right: 10px;"></div>
+                                        </div>
+                                    </div>
+                                    <span class="text-muted" style="color: #bbb;"><del>Original Price: {{ item.original_price }}</del></span> <br>
+                                    <span class="text-success" style="font-size: 1.2rem; color: orange;"> Rs.{{ item.selling_price }}</span>
+                                </div>
+                                {% if item.quantity > 0 %}
+                                    <div>
+                                        <span class="badge bg-success" style="font-size: 1rem;">In stock</span>
+                                        <div class="mt-3">
+                                            <form>
+                                                {% csrf_token %}
+                                                <input type="hidden" value="{{ item.id }}" class="prod_id">
+                                                <label for="quantity" style="color: #ccc;">Quantity</label>
+                                                <div class="input-group mb-3" style="max-width: 150px;">
+                                                    <button class="btn btn-outline-light decrement-btn" type="button" data-counter="{{ forloop.counter }}">-</button>
+                                                    <input type="text" class="form-control qty-input text-center" value="1" data-counter="{{ forloop.counter }}" style="background-color: #333; color: #fff;">
+                                                    <button class="btn btn-outline-light increment-btn" type="button" data-counter="{{ forloop.counter }}">+</button>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <button type="button" class="btn btn-primary addToCartBtn" style="background-color: #ff8c00; border: 1px solid #ff8c00; color: #000; font-weight: bold; padding: 0.5rem 1rem;">
+                                                        Add to Cart
+                                                    </button>
+                                                    <button class="btn favorite-btn" data-product-id="1">
+                                                        <i class="bi bi-heart heart-icon" style="font-size: 2rem;"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <h6 class="text-danger">Out of Stock</h6>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endfor %}
+{% endblock content %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    // Event listener for increment button
+    $(document).on('click', '.increment-btn', function() {
+        var counter = $(this).data('counter');
+        var quantityInput = $('.qty-input[data-counter="' + counter + '"]');
+        var quantity = parseInt(quantityInput.val()) + 1;
+        quantityInput.val(quantity);
+    });
+
+    // Event listener for decrement button
+    $(document).on('click', '.decrement-btn', function() {
+        var counter = $(this).data('counter');
+        var quantityInput = $('.qty-input[data-counter="' + counter + '"]');
+        var quantity = parseInt(quantityInput.val());
+        if (quantity > 1) {
+            quantityInput.val(quantity - 1);
+        }
+    });
+
+    // Add to cart functionality
+    $(document).on('click', '.addToCartBtn', function(e) {
+        e.preventDefault();
+
+        var product_data = $(this).closest('.product_data');
+        var product_id = product_data.find('.prod_id').val();
+        var product_qty = product_data.find('.qty-input').val();
+        var token = $('input[name=csrfmiddlewaretoken]').val();
+
+        $.ajax({
+            method: "POST",
+            url: "{% url 'addtocart' %}",
+            data: {
+                'product_id': product_id,
+                'product_qty': product_qty,
+                'csrfmiddlewaretoken': token
+            },
+            success: function (response) {
+                console.log(response);
+                alertify.success(response.status);
+            }
+        });
+    });
+});
+
+
+</script>
+{% endblock scripts %}

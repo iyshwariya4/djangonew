@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+    .fancy-animated-text {
+        font-family: 'Pacifico', cursive;
+        color: orange;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+</style>
+{% include 'inc/slider.html' %}
+<div class="container text-center my-5">
+    <h2 class="fancy-animated-text">Choose Your Pick!!</h2>
+</div>
+<div class="container mt-4 p-5">
+    <div class="row g-3 isotope-container">
+        {% for item in category %}
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 isotope-item">
+            <div class="card h-100 portfolio-item">
+                <a href="{% url 'collectionsview' item.slug %}">
+                    <img src="{{ item.image.url }}" class="card-img-top {{ item.size }}" alt="{{ item.name }}">
+                </a>
+                <div class="portfolio-info">
+                    <h5 class="card-title text-center">{{ item.name }}</h5>
+                    <a href="{{ item.image.url }}" title="{{ item.name }}" ><i></i></a>
+                    <a href="{% url 'collectionsview' item.slug %}" ><i></i></a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/glightbox@3.1.0/dist/js/glightbox.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var iso = new Isotope('.isotope-container', {
+      itemSelector: '.isotope-item',
+      layoutMode: 'masonry'
+    });
+
+    GLightbox({ selector: '.glightbox' });
+  });
+</script>
+
+<style>
+
+  /* Portfolio-style grid for collections */
+  .portfolio-item {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+     
+      
+  }
+  
+  .portfolio-item img {
+      transition: all 0.3s ease-in-out;
+  }
+  
+  .portfolio-item .portfolio-info {
+   
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(107, 105, 105, 0.5), rgba(0, 0, 0, 0.5));
+      padding: 8px;
+      transition: all 0.3s ease-in-out;
+      opacity: 1;
+  }
+  
+  .portfolio-item .portfolio-info h5 {
+      font-size: 18px;
+      color: #fff;
+  }
+  
+  .portfolio-item .preview-link, . {
+      color: #fff;
+      font-size: 20px;
+      display: inline-block;
+      padding: 7px;
+      margin-right: 10px;
+      transition: 0.3s;
+  }
+  
+  .portfolio-item .preview-link:hover, .portfolio-item .details-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .portfolio-item:hover img {
+      transform: scale(1.1);
+  }
+  
+  .portfolio-item:hover .portfolio-info {
+      opacity: 1;
+  }
+  
+  /* Maintain your existing image size classes */
+  .large {
+      height: 320px;
+  }
+  
+  .medium {
+      height: 230px;
+  }
+  
+  .small {
+      height: 200px;
+  }
+  
+  .smaller {
+      height: 140px;
+  }
+  .card-img-top {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 28px 28px 28px 28px;
+    transition: all 0.3s ease-in-out;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin:10px;
+  
+  border-image: linear-gradient(to top, black,#FCC70B ) 2 / 4px;
+  background-image: -moz-linear-gradient(center bottom, black 33%,black 67% );
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.33,black ), color-stop(0.67, #FCC70B));
+  
+  border-radius: 28px;
+  overflow: hidden;
+}
+.border{
+  shadow black
+
+}
+
+
+
+.card-title-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(rgba(107, 105, 105, 0.5), rgba(0, 0, 0, 0.5));
+  border-radius: 0 0 27px 27px;
+  padding: 8px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  opacity: 1;
+}
+</style>
+
+
+
+{% endblock content %}
